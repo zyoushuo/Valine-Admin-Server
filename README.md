@@ -21,7 +21,7 @@
 
 如果你已经在使用源插件了，那么只需要在自定义环境变量中添加一个新的变量`SCKEY`,并将源码部署的地址改成本项目地址`https://github.com/sviptzk/Valine-Admin-Server.git`。
 
-
+更多内容请参考我的博客[Hexo博客valine评论微信提醒](https://www.antmoe.com/posts/2380732b/index.html)
 
 ## 其他说明
 
@@ -31,5 +31,6 @@
 
 ## 更新说明
 
+- 2020-03-20
 - 2019-02-06
   - 将server酱接口整合到原项目。
