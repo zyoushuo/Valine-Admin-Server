@@ -41,35 +41,26 @@
         padding: 5px 30px;
         margin: -25px auto 0 ;
         box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.30)">
-          Dear&nbsp;<%=pname%>
+          Dear&nbsp;<%=siteName%>
         </p>
         <br />
         <center>
           <h3>
-            来自<span style="text-decoration: none;color: orange "><%=name%></span>的回复
+            来自<span style="text-decoration: none;color: orange "><%=name%>（<%=mail%>）</span>发表评论
           </h3>
         </center>
         <br />
         &nbsp; &nbsp;
-        <p
-          style="border-bottom:#ddd 1px solid;border-left:#ddd 1px solid;padding-bottom:20px;background-color:#eee;margin:15px 0px;padding-left:20px;padding-right:20px;border-top:#ddd 1px solid;border-right:#ddd 1px solid;padding-top:20px">
-          您在<a style="text-decoration: none;color: orange " target="_blank"
+        <p>
+          Ta在<a style="text-decoration: none;color: orange " target="_blank"
             href="<%=url%>#post-comment"><%=siteName%></a>上发表的评论：
         </p>
         &nbsp; &nbsp;
-        <center>
-          <%-ptext%>
+        <center
+          style="border-bottom:#ddd 1px solid;border-left:#ddd 1px solid;padding-bottom:20px;background-color:#eee;margin:15px 0px;padding-left:20px;padding-right:20px;border-top:#ddd 1px solid;border-right:#ddd 1px solid;padding-top:20px">
+          <%-text%>
         </center>
         &nbsp; &nbsp;
-        <p
-          style="border-bottom:#ddd 1px solid;border-left:#ddd 1px solid;padding-bottom:20px;background-color:#eee;margin:15px 0px;padding-left:20px;padding-right:20px;border-top:#ddd 1px solid;border-right:#ddd 1px solid;padding-top:20px">
-          <%=name%> 给您回复啦~~~：
-        </p>
-        <p>
-          <center>
-            <%-text%>
-          </center>
-        </p>
         <br />
         <div style="text-align: center;margin-top: 40px;">
           <img src="https://ae01.alicdn.com/kf/U0968ee80fd5c4f05a02bdda9709b041eE.png" alt="hr" style="width:100%;
@@ -93,7 +84,6 @@
       </div>
     </div>
   </div>
-
   <script>
     var _c = document.getElementById("content");
     _c.innerHTML = (_c.innerHTML || "")

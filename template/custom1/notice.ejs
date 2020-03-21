@@ -17,10 +17,10 @@
     }
   </style>
 </head>
+
 <body tabindex="0" role="listitem">
   <div id="content">
-    <div
-      style="background: white;
+    <div style="background: white;
       width: 95%;
       max-width: 800px;
       margin: auto auto;
@@ -28,80 +28,66 @@
       border:orange 1px solid;
       overflow: hidden;
       -webkit-box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.12);
-      box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.18);"
-    >
+      box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.18);">
       <header style="overflow: hidden;">
-        <img
-          style="width:100%;z-index: 666;"
-          src="https://ae01.alicdn.com/kf/U5bb04af32be544c4b41206d9a42fcacfd.jpg"
-        />
+        <img style="width:100%;z-index: 666;" src="https://ae01.alicdn.com/kf/U5bb04af32be544c4b41206d9a42fcacfd.jpg" />
       </header>
       <div style="padding: 5px 20px;">
-        <p
-          style="position: relative;
+        <p style="position: relative;
         color: white;
         float: left;
         z-index: 999;
         background: orange;
         padding: 5px 30px;
         margin: -25px auto 0 ;
-        box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.30)"
-        >
+        box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.30)">
           Dear&nbsp;<%=siteName%>
         </p>
         <br />
         <center>
           <h3>
-            来自<span style="text-decoration: none;color: orange "
-              ><%=name%></span
-            >发表评论
+            来自<span style="text-decoration: none;color: orange "><%=name%>（<%=mail%>）</span>发表评论
           </h3>
         </center>
         <br />
         &nbsp; &nbsp;
-        <p
-          style="border-bottom:#ddd 1px solid;border-left:#ddd 1px solid;padding-bottom:20px;background-color:#eee;margin:15px 0px;padding-left:20px;padding-right:20px;border-top:#ddd 1px solid;border-right:#ddd 1px solid;padding-top:20px"
-        >
-          Ta在<a
-            style="text-decoration: none;color: orange "
-            target="_blank"
-            href="<%=url%>"
+        <p>
+          Ta在<a style="text-decoration: none;color: orange " target="_blank" href="<%=url%#post-comment>"
             ><%=siteName%></a
           >上发表的评论：
         </p>
         &nbsp; &nbsp;
-        <center>
-          <%-text%>
-        </center>
-        &nbsp; &nbsp;
-        <br />
-        <div style="text-align: center;margin-top: 40px;">
-          <img
-            src="https://ae01.alicdn.com/kf/U0968ee80fd5c4f05a02bdda9709b041eE.png"
-            alt="hr"
-            style="width:100%;
+        <center
+          style=" border-bottom:#ddd 1px solid;border-left:#ddd 1px
+            solid;padding-bottom:20px;background-color:#eee;margin:15px
+            0px;padding-left:20px;padding-right:20px;border-top:#ddd 1px solid;border-right:#ddd 1px
+            solid;padding-top:20px">
+            <%-text%>
+            </center>
+            &nbsp; &nbsp;
+            <br />
+            <div style="text-align: center;margin-top: 40px;">
+              <img src="https://ae01.alicdn.com/kf/U0968ee80fd5c4f05a02bdda9709b041eE.png" alt="hr" style="width:100%;
                                                                                                   margin:5px auto 5px auto;
-                                                                                                  display: block;"
-          />
-          <a
-            style="text-transform: uppercase;
+                                                                                                  display: block;" />
+              <a style="text-transform: uppercase;
                       text-decoration: none;
                       font-size: 14px;
                       border: 2px solid #6c7575;
                       color: #2f3333;
                       padding: 10px;
                       display: inline-block;
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  margin: 10px auto 0; "
-            target="_blank"
-            href="<%=url%>#comments"
-            ><%=siteName%>｜传送！Biu~</a
-          >
-        </div>
-        &nbsp; &nbsp;
-        <p style="font-size: 12px;text-align: center;color: #999;">
-          欢迎常来做客哦！<br />
-          © 2020 <a style="text-decoration:none; color:orange" href="<%=siteUrl%>"> <%=siteName%> </a>
-        </p>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  margin: 10px auto 0; " target="_blank"
+                href="<%=url%>#post-comment"><%=siteName%>｜传送！Biu~</a>
+            </div>
+            &nbsp; &nbsp;
+            <p style="font-size: 12px;text-align: center;color: #999;">
+              欢迎常来做客哦！<br />
+              © 2020
+              <a style="text-decoration:none; color:orange" href="<%=siteUrl%>">
+                <%=siteName%>
+              </a>
+            </p>
       </div>
     </div>
   </div>

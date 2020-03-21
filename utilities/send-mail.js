@@ -34,7 +34,6 @@ exports.notice = (comment) => {
         return;
     }
 	let describe = '### 您的网站\r\n'+process.env.SITE_NAME+'\r\n ### 评论内容'+"\r\n > "+comment.get('comment')+'\r\n'+'原文地址 👉 '+ process.env.SITE_URL + comment.get('url') +'\r\n ### 评论人\r\n'+comment.get('nick')+'('+comment.get('mail')+')'
-	console.log(describe);
 	request.post({url:'https://sc.ftqq.com/'+process.env.SCKEY+'.send', form:{text:process.env.SITE_NAME+'来评论啦！',desp:describe}}, function(error, response, body) {
 	if (!error && response.statusCode == 200) {
 		console.log("server酱发送成功！")}
@@ -45,7 +44,8 @@ exports.notice = (comment) => {
                             siteUrl: process.env.SITE_URL,
                             name: comment.get('nick'),
                             text: comment.get('comment'),
-                            url: process.env.SITE_URL + comment.get('url')
+                            url: process.env.SITE_URL + comment.get('url') + process.env.COMMENT,
+                            mail: comment.get('mail'),
                         });
 
     let mailOptions = {
@@ -59,14 +59,11 @@ exports.notice = (comment) => {
         if (error) {
             return console.log(error);
         }
-        console.log(process.env.SCKEY)
         comment.set('isNotified', true);
         comment.save();
         console.log("收到一条评论, 已提醒站长");
     });
 }
-
-
 
 // 发送邮件通知他人
 exports.send = (currentComment, parentComment)=> {

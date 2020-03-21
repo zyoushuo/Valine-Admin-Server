@@ -51,22 +51,23 @@
         </center>
         <br />
         &nbsp; &nbsp;
-        <p
-          style="border-bottom:#ddd 1px solid;border-left:#ddd 1px solid;padding-bottom:20px;background-color:#eee;margin:15px 0px;padding-left:20px;padding-right:20px;border-top:#ddd 1px solid;border-right:#ddd 1px solid;padding-top:20px">
+        <p>
           您在<a style="text-decoration: none;color: orange " target="_blank"
-            href="<%=url%>#post-comment"><%=siteName%></a>上发表的评论：
+            href="<%=url%>#post-comment">&nbsp;<%=siteName%>&nbsp;</a>上曾发表的评论：
         </p>
         &nbsp; &nbsp;
         <center>
           <%-ptext%>
         </center>
         &nbsp; &nbsp;
-        <p
-          style="border-bottom:#ddd 1px solid;border-left:#ddd 1px solid;padding-bottom:20px;background-color:#eee;margin:15px 0px;padding-left:20px;padding-right:20px;border-top:#ddd 1px solid;border-right:#ddd 1px solid;padding-top:20px">
-          <%=name%> 给您回复啦~~~：
+        <p style="
+        padding-bottom: 20px;
+    ">
+          <span style="color: orange;"><%=name%></span> 给您回复啦~~~：
         </p>
         <p>
-          <center>
+          <center
+            style="border-bottom:#ddd 1px solid;border-left:#ddd 1px solid;padding-bottom:20px;background-color:#eee;margin:15px 0px;padding-left:20px;padding-right:20px;border-top:#ddd 1px solid;border-right:#ddd 1px solid;padding-top:20px">
             <%-text%>
           </center>
         </p>
@@ -86,9 +87,10 @@
             href="<%=url%>#post-comment"><%=siteName%>｜传送！Biu~</a>
         </div>
         &nbsp; &nbsp;
-        <p style="font-size: 12px;text-align: center;color: #999;">
-          欢迎常来做客哦！<br />
-          © 2020 <a style="text-decoration:none; color:orange" href="<%=siteUrl%>"> <%=siteName%> </a>
+        <p style="font-size: 12px;text-align: center;color: #999;" id="hitokoto">
+          欢迎常来做客哦！</p>
+        <p style="font-size: 12px;text-align: center;color: #999;">© 2020 <a style="text-decoration:none; color:orange"
+            href="<%=siteUrl%>"> <%=siteName%> </p>
         </p>
       </div>
     </div>
@@ -99,6 +101,16 @@
     _c.innerHTML = (_c.innerHTML || "")
       .replace(/(href|formAction|onclick|javascript)/gi, "__$1")
       .replace(/<\/?marquee>/gi, "");
+    var xhr = new XMLHttpRequest();
+    xhr.open('get', 'https://v1.hitokoto.cn/?c=e&c=j&c=k');
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4) {
+        var data = JSON.parse(xhr.responseText);
+        var hitokoto = document.getElementById('hitokoto');
+        hitokoto.innerText = data.hitokoto;
+      }
+    }
+    xhr.send();
   </script>
   <style type="text/css">
     body {
