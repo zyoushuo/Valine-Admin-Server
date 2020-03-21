@@ -37,14 +37,15 @@ exports.notice = (comment) => {
 	request.post({url:'https://sc.ftqq.com/'+process.env.SCKEY+'.send', form:{text:process.env.SITE_NAME+'来评论啦！',desp:describe}}, function(error, response, body) {
 	if (!error && response.statusCode == 200) {
 		console.log("server酱发送成功！")}
-	});
+    });
+    let comment_id = process.env.COMMENT ?  process.env.COMMENT : "#comment";
     let emailSubject = '👉 咚！「' + process.env.SITE_NAME + '」上有新评论了';
     let emailContent =  noticeTemplate({
                             siteName: process.env.SITE_NAME,
                             siteUrl: process.env.SITE_URL,
                             name: comment.get('nick'),
                             text: comment.get('comment'),
-                            url: process.env.SITE_URL + comment.get('url') + process.env.COMMENT,
+                            url: process.env.SITE_URL + comment.get('url') + comment_id,
                             mail: comment.get('mail'),
                         });
 
