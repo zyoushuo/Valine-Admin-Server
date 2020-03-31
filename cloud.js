@@ -2,34 +2,49 @@ const AV = require('leanengine');
 const mail = require('./utilities/send-mail');
 const Comment = AV.Object.extend('Comment');
 const request = require('request');
-AV.Cloud.afterSave('Comment', function (request) {
-    let currentComment = request.object;
+const spam = require('./utilities/check-spam');
 
-    // 通知站长
-    mail.notice(currentComment);
-    
+function sendNotification(currentComment, defaultIp) {
+    // 发送博主通知邮件
+    if (currentComment.get('mail') !== process.env.BLOGGER_EMAIL) {
+        mail.notice(currentComment);
+    }
+
+    let ip = currentComment.get('ip') || defaultIp;
+    console.log('IP: %s', ip);
+    spam.checkSpam(currentComment, ip);
+
     // AT评论通知
-    let pid =currentComment.get('pid');
+    let rid =currentComment.get('pid') || currentComment.get('rid');
 
-    if (!pid) {
+    if (!rid) {
         console.log("这条评论没有 @ 任何人");
+        return;
+    } else if (currentComment.get('isSpam')) {
+        console.log('检测到垃圾评论，通知邮件取消发送');
         return;
     }
 
-    // 通过被 @ 的评论 id, 则找到这条评论留下的邮箱并发送通知.
     let query = new AV.Query('Comment');
-    query.get(pid).then(function (parentComment) {
-        if (parentComment.get('mail')) {
+    query.get(rid).then(function (parentComment) {
+        if (parentComment.get('mail') && parentComment.get('mail') !== process.env.BLOGGER_EMAIL) {
             mail.send(currentComment, parentComment);
         } else {
-            console.log(currentComment.get('nick') + " @ 了" + parentComment.get('nick') + ", 但被 @ 的人没留邮箱... 无法通知");
+            console.log('被@者匿名，不会发送通知');
         }
+        
     }, function (error) {
-        console.warn('好像 @ 了一个不存在的人!!!');
+        console.warn('获取@对象失败！');
     });
+}
+
+AV.Cloud.afterSave('Comment', function (req) {
+    let currentComment = req.object;
+    // 检查垃圾评论
+    return sendNotification(currentComment, req.meta.remoteAddress);
 });
 
-AV.Cloud.define('resend_mails', function(req) {
+AV.Cloud.define('resend-mails', function(req) {
     let query = new AV.Query(Comment);
     query.greaterThanOrEqualTo('createdAt', new Date(new Date().getTime() - 24*60*60*1000));
     query.notEqualTo('isNotified', true);
@@ -48,10 +63,11 @@ AV.Cloud.define('resend_mails', function(req) {
 
         });
     });
-});
+  });
 
-AV.Cloud.define('self_wake', function(req) {
+AV.Cloud.define('self-wake', function(req) {
     request(process.env.ADMIN_URL, function (error, response, body) {
         console.log('自唤醒任务执行成功，响应状态码为:', response && response.statusCode);
-    });
+      });
 })
+
