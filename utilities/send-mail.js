@@ -7,8 +7,8 @@ var request = require("request");
 let config = {
   auth: {
     user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS
-  }
+    pass: process.env.SMTP_PASS,
+  },
 };
 
 if (process.env.SMTP_SERVICE != null) {
@@ -36,7 +36,7 @@ let sendTemplate = ejs.compile(
   )
 );
 
-transporter.verify(function(error, success) {
+transporter.verify(function (error, success) {
   if (error) {
     console.log("SMTP邮箱配置异常：", error);
   }
@@ -46,7 +46,7 @@ transporter.verify(function(error, success) {
 });
 
 // 提醒站长
-exports.notice = comment => {
+exports.notice = (comment) => {
   // 站长自己发的评论不需要通知
   if (
     comment.get("mail") === process.env.TO_EMAIL ||
@@ -72,30 +72,31 @@ exports.notice = comment => {
   request.post(
     {
       url: "https://sc.ftqq.com/" + process.env.SCKEY + ".send",
-      form: { text: process.env.SITE_NAME + "来评论啦！", desp: describe }
+      form: { text: process.env.SITE_NAME + "来评论啦！", desp: describe },
     },
-    function(error, response, body) {
+    function (error, response, body) {
       if (!error && response.statusCode == 200) {
         console.log("server酱发送成功！");
       }
     }
   );
   let comment_id = process.env.COMMENT ? process.env.COMMENT : "#comment";
-  let emailSubject = "👉 咚！「" + process.env.SITE_NAME + "」上有新评论了";
+  let emailSubject =
+    "📌 哇！「" + process.env.SITE_NAME + "」上有人回复了你啦！快点我！💦";
   let emailContent = noticeTemplate({
     siteName: process.env.SITE_NAME,
     siteUrl: process.env.SITE_URL,
     name: comment.get("nick"),
     text: comment.get("comment"),
     url: process.env.SITE_URL + comment.get("url") + comment_id,
-    mail: comment.get("mail")
+    mail: comment.get("mail"),
   });
 
   let mailOptions = {
     from: '"' + process.env.SENDER_NAME + '" <' + process.env.SMTP_USER + ">",
     to: process.env.TO_EMAIL ? process.env.TO_EMAIL : process.env.SMTP_USER,
     subject: emailSubject,
-    html: emailContent
+    html: emailContent,
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
@@ -126,13 +127,13 @@ exports.send = (currentComment, parentComment) => {
     ptext: parentComment.get("comment"),
     name: currentComment.get("nick"),
     text: currentComment.get("comment"),
-    url: process.env.SITE_URL + currentComment.get("url") + comment_id
+    url: process.env.SITE_URL + currentComment.get("url") + comment_id,
   });
   let mailOptions = {
     from: '"' + process.env.SENDER_NAME + '" <' + process.env.SMTP_USER + ">",
     to: parentComment.get("mail"),
     subject: emailSubject,
-    html: emailContent
+    html: emailContent,
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
