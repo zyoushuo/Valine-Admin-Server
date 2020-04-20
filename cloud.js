@@ -6,7 +6,7 @@ const spam = require('./utilities/check-spam')
 
 function sendNotification (currentComment, defaultIp) {
   // 发送博主通知邮件
-  if (currentComment.get('mail') !== process.env.BLOGGER_EMAIL) {
+  if (currentComment.get('mail') !== process.env.TO_EMAIL) {
     mail.notice(currentComment)
   }
 
@@ -27,7 +27,7 @@ function sendNotification (currentComment, defaultIp) {
 
   const query = new AV.Query('Comment')
   query.get(rid).then(function (parentComment) {
-    if (parentComment.get('mail') && parentComment.get('mail') !== process.env.BLOGGER_EMAIL) {
+    if (parentComment.get('mail') && parentComment.get('mail') !== process.env.TO_EMAIL) {
       mail.send(currentComment, parentComment)
     } else {
       console.log('被@者匿名，不会发送通知')
@@ -65,7 +65,7 @@ AV.Cloud.define('resend_mails', function (req) {
 })
 
 AV.Cloud.define('self_wake', function (req) {
-  axios.get('http://'+process.env.ADMIN_URL)
+  axios.get(process.env.ADMIN_URL)
     .then(function (response) {
       console.log('自唤醒任务执行成功，响应状态码为:', response && response.status)
     })
