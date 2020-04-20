@@ -81,7 +81,7 @@ exports.notice = (comment) => {
     comment.save();
     console.log("收到一条评论, 已邮件提醒站长");
   });
-
+  // 微信提醒
   const scContent =
     "#### 评论内容" +
     "\r\n > " +
@@ -111,6 +111,41 @@ exports.notice = (comment) => {
       })
       .catch(function (error) {
         console.log("微信提醒失败:", error);
+      });
+  }
+  // qq提醒
+  const qContent =
+    "嘿！你的网站： " +
+    process.env.SITE_NAME +
+    "  收到新评论啦！" +
+    "\n\r" +
+    "评论内容如下：\n\r" +
+    comment.get("comment") +
+    "\n\r评论者昵称：" +
+    comment.get("nick") +
+    "（" +
+    comment.get("mail") +
+    "）";
+  if (process.env.QMSG != null) {
+    let qq = "";
+    if (process.env.QQ != null) {
+      qq = "&qq=" + process.env.QQ;
+    }
+    axios({
+      method: "post",
+      url: `https://qmsg.zendee.cn:443/send/${process.env.QMSG}.html`,
+      data: `msg=${qContent}` + qq,
+      headers: {
+        "Content-type": "application/x-www-form-urlencoded",
+      },
+    })
+      .then(function (response) {
+        if (response.status === 200 && response.data.success === true)
+          console.log("已QQ提醒站长", qq);
+        else console.log("QQ提醒失败:", response.data);
+      })
+      .catch(function (error) {
+        console.log("QQ提醒回馈:", error);
       });
   }
 };

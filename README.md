@@ -6,6 +6,8 @@ Valine Admin 是 [Valine 评论系统](https://deserts.io/diy-a-comment-system/)
 
 安装教程请以[博客最新版](https://deserts.io/valine-admin-document/)为准。
 
+此版本为小康修改版，如有问题请先去我的博客找找有没有答案👉[https://www.antmoe.com/posts/2380732b/index.html](https://www.antmoe.com/posts/2380732b/index.html)
+
 ## 快速部署
 
  1. 在[Leancloud](https://leancloud.cn/dashboard/#/apps)云引擎设置界面，填写代码库并保存：https://github.com/DesertsP/Valine-Admin.git
@@ -31,6 +33,8 @@ Valine Admin 是 [Valine 评论系统](https://deserts.io/diy-a-comment-system/)
 | BLOGGER_EMAIL    | xxxxx@gmail.com         | [可选]博主通知收件地址，默认使用SENDER_EMAIL                 |
 | AKISMET_KEY      | xxxxxxxxxxxx            | [可选]Akismet Key 用于垃圾评论检测，设为MANUAL_REVIEW开启人工审核，留空不使用反垃圾 |
 | SERVER_KEY       | SCUxxxxxxxx             | [可选][Server酱](http://sc.ftqq.com/) SCKEY 用于微信通知，   |
+| QMSG             | 4122XXXX                | 可选[https://qmsg.zendee.cn/](https://qmsg.zendee.cn/) 获取您的专属密钥 |
+| QQ               | 535668586               | 用于接受的qq，不填为全部支持多个qq用英文逗号分隔             |
 
  **以上必填参数请务必正确设置。**
 
@@ -180,6 +184,10 @@ lean deploy
 [MIT License](https://github.com/panjunwen/LeanComment/blob/master/LICENSE)
 
 ## 更新日志
+
+- 2020-04-20
+
+  增加了qq提醒
 
 - 2020-04-19
 
