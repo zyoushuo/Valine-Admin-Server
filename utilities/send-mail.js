@@ -125,7 +125,9 @@ exports.notice = (comment) => {
     comment.get("nick") +
     "（" +
     comment.get("mail") +
-    "）";
+    "）\n\r原文地址 👉 " +
+    process.env.SITE_URL +
+    comment.get("url");
   if (process.env.QMSG != null) {
     let qq = "";
     if (process.env.QQ != null) {
