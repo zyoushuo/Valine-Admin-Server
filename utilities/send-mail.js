@@ -4,6 +4,7 @@ const ejs = require("ejs");
 const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
+const $ = require("cheerio");
 
 const config = {
   auth: {
@@ -52,35 +53,38 @@ exports.notice = (comment) => {
   const text = comment.get("comment");
   const url = process.env.SITE_URL + comment.get("url");
   const comment_id = process.env.COMMENT ? process.env.COMMENT : "";
-  const emailSubject =
-    "📌 哇！「" + process.env.SITE_NAME + "」上有人回复了你啦！快点我！💦";
-  const emailContent = noticeTemplate({
-    siteName: process.env.SITE_NAME,
-    siteUrl: process.env.SITE_URL,
-    name: name,
-    text: text,
-    url: url + comment_id,
-    mail: comment.get("mail"),
-  });
 
-  const mailOptions = {
-    from: '"' + process.env.SENDER_NAME + '" <' + process.env.SMTP_USER + ">",
-    to:
-      process.env.TO_EMAIL ||
-      process.env.BLOGGER_EMAIL ||
-      process.env.SMTP_USER,
-    subject: emailSubject,
-    html: emailContent,
-  };
+  if (!process.env.DISABLE_EMAIL) {
+    const emailSubject =
+      "📌 哇！「" + process.env.SITE_NAME + "」上有人回复了你啦！快点我！💦";
+    const emailContent = noticeTemplate({
+      siteName: process.env.SITE_NAME,
+      siteUrl: process.env.SITE_URL,
+      name: name,
+      text: text,
+      url: url + comment_id,
+      mail: comment.get("mail"),
+    });
+    const mailOptions = {
+      from: '"' + process.env.SENDER_NAME + '" <' + process.env.SMTP_USER + ">",
+      to:
+        process.env.TO_EMAIL ||
+        process.env.BLOGGER_EMAIL ||
+        process.env.SMTP_USER,
+      subject: emailSubject,
+      html: emailContent,
+    };
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      return console.log(error);
-    }
-    comment.set("isNotified", true);
-    comment.save();
-    console.log("收到一条评论, 已邮件提醒站长");
-  });
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        return console.log(error);
+      }
+      comment.set("isNotified", true);
+      comment.save();
+      console.log("收到一条评论, 已邮件提醒站长");
+    });
+  }
+
   // 微信提醒
   const scContent =
     "#### 评论内容" +
@@ -113,41 +117,58 @@ exports.notice = (comment) => {
         console.log("微信提醒失败:", error);
       });
   }
-  // qq提醒
-  const qContent =
-    "嘿！你的网站： " +
-    process.env.SITE_NAME +
-    "  收到新评论啦！" +
-    "\n\r" +
-    "评论内容如下：\n\r" +
-    comment.get("comment") +
-    "\n\r评论者昵称：" +
-    comment.get("nick") +
-    "（" +
-    comment.get("mail") +
-    "）\n\r原文地址 👉 " +
-    process.env.SITE_URL +
-    comment.get("url");
-  if (process.env.QMSG != null) {
+  // QQ提醒
+  if (process.env.QMSG_KEY != null) {
+    if (process.env.QQ_SHAKE != null) {
+      axios
+        .get(
+          `https://qmsg.zendee.cn:443/send/${
+            process.env.QMSG_KEY
+          }.html?msg=${encodeURIComponent("[CQ:shake]")}`
+        )
+        .then(function (response) {
+          if (response.status === 200 && response.data.success === true) {
+            console.log("已发送QQ戳一戳");
+          } else {
+            console.log("发送QQ戳一戳失败:", response.data);
+          }
+        })
+        .catch(function (error) {
+          console.log("发送QQ戳一戳失败:", error);
+        });
+    }
     let qq = "";
     if (process.env.QQ != null) {
       qq = "&qq=" + process.env.QQ;
     }
-    axios({
-      method: "post",
-      url: `https://qmsg.zendee.cn:443/send/${process.env.QMSG}.html`,
-      data: `msg=${qContent}` + qq,
-      headers: {
-        "Content-type": "application/x-www-form-urlencoded",
-      },
-    })
+    const scContent = `[CQ:face,id=119]您的 ${
+      process.env.SITE_NAME
+    } 上有新评论了！
+[CQ:face,id=183]${name} 发表评论：
+[CQ:face,id=77][CQ:face,id=77][CQ:face,id=77][CQ:face,id=77][CQ:face,id=77]
+${$(
+  text
+    .replace(/  <img.*?src="(.*?)".*?>/g, "\n[图片]$1\n")
+    .replace(/<br>/g, "\n")
+)
+  .text()
+  .replace(/\n+/g, "\n")
+  .replace(/\n+$/g, "")}
+[CQ:face,id=76][CQ:face,id=76][CQ:face,id=76][CQ:face,id=76][CQ:face,id=76]
+[CQ:face,id=169]${url + "#" + comment.get("objectId")}`;
+    axios
+      .get(
+        `https://qmsg.zendee.cn:443/send/${
+          process.env.QMSG_KEY
+        }.html?msg=${encodeURIComponent(scContent)}` + qq
+      )
       .then(function (response) {
         if (response.status === 200 && response.data.success === true)
-          console.log("已QQ提醒站长", qq);
+          console.log("已QQ提醒站长");
         else console.log("QQ提醒失败:", response.data);
       })
       .catch(function (error) {
-        console.log("QQ提醒回馈:", error);
+        console.log("QQ提醒失败:", error);
       });
   }
 };
