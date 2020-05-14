@@ -9,6 +9,7 @@ const Comment = AV.Object.extend("Comment");
 // Comment 列表
 router.get("/", function (req, res, next) {
   if (req.currentUser) {
+    console.log("成功登录了后台！", new Date());
     const query = new AV.Query(Comment);
     query.descending("createdAt");
     query.limit(50);
@@ -36,6 +37,7 @@ router.get("/", function (req, res, next) {
       )
       .catch(next);
   } else {
+    console.log("有用户成功找到了后台地址！", new Date());
     res.redirect("/");
   }
 });
