@@ -51,17 +51,10 @@ AV.Cloud.afterSave("Comment", function (req) {
 
 AV.Cloud.define("resend_mails", function (req) {
   const query = new AV.Query(Comment);
-  if (process.env.LEANCLOUD_REGION === "CN") {
-    query.greaterThanOrEqualTo(
-      "createdAt",
-      new Date(new Date().getTime() - 24 * 60 * 60 * 1000)
-    );
-  } else if (process.env.LEANCLOUD_REGION === "US") {
-    query.greaterThanOrEqualTo(
-      "createdAt",
-      new Date(new Date().getTime() - 32 * 60 * 60 * 1000)
-    );
-  }
+  query.greaterThanOrEqualTo(
+    "createdAt",
+    new Date(new Date().getTime() - 24 * 60 * 60 * 1000)
+  );
   query.notEqualTo("isNotified", true);
   // 如果你的评论量很大，可以适当调高数量限制，最高1000
   query.limit(200);

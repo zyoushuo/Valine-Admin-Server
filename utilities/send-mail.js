@@ -77,7 +77,7 @@ exports.notice = (comment) => {
 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        return console.log(error);
+        return console.error(error);
       }
       comment.set("isNotified", true);
       comment.save();
@@ -114,7 +114,7 @@ exports.notice = (comment) => {
         else console.log("微信提醒失败:", response.data);
       })
       .catch(function (error) {
-        console.log("微信提醒失败:", error);
+        console.warn("微信提醒失败:", error.message);
       });
   }
   // QQ提醒
@@ -130,11 +130,11 @@ exports.notice = (comment) => {
           if (response.status === 200 && response.data.success === true) {
             console.log("已发送QQ戳一戳");
           } else {
-            console.log("发送QQ戳一戳失败:", response.data);
+            console.error("发送QQ戳一戳失败:", response.data);
           }
         })
         .catch(function (error) {
-          console.log("发送QQ戳一戳失败:", error);
+          console.error("发送QQ戳一戳失败:", error.message);
         });
     }
     let qq = "";
@@ -165,10 +165,10 @@ ${$(
       .then(function (response) {
         if (response.status === 200 && response.data.success === true)
           console.log("已QQ提醒站长");
-        else console.log("QQ提醒失败:", response.data);
+        else console.warn("QQ提醒失败:", response.data);
       })
       .catch(function (error) {
-        console.log("QQ提醒失败:", error);
+        console.error("QQ提醒失败:", error.message);
       });
   }
 };
@@ -225,7 +225,7 @@ exports.verify = function () {
   console.log("....");
   transporter.verify(function (error, success) {
     if (error) {
-      console.log(error);
+      console.error(error.message);
     }
     console.log("Server is ready to take our messages");
   });
